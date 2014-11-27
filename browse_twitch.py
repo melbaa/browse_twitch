@@ -5,29 +5,13 @@ don't care about
 
 import codecs
 import collections
-import json
 import re
 import sys
 import traceback
 import platform
-import webbrowser as wb #make sure firefox is default for this to work
+import webbrowser as wb  # make sure firefox is default for this to work
 
 import requests
-
-#fill valid_streams with streams that have a game
-#skip those in ignore_games and unset games
-def find_valid_streams(game, valid_streams):
-  skip = False
-  if game is None:
-    return valid_streams
-  for ignored in ignore_games:
-    if ignored.lower() in game.lower():
-      skip = True
-  if not skip:
-    valid_streams.append(stream)
-  return valid_streams #make obvious what was changed
-
-
 
 
 class Stream:
@@ -39,6 +23,7 @@ class Stream:
         self.status = channel_json.get('status', None)
         self.game = channel_json.get('game', None)
 
+
 class StreamStore:
     """
     pull stream info from twitch api and cache it
@@ -46,14 +31,16 @@ class StreamStore:
     def __init__(self):
         self.streams = []
         self.url = 'https://api.twitch.tv/kraken/streams/?offset={}&limit={}'
-        self.current_offset = 0 # page number
-        self.limit = 100 # num streams to request
+        self.current_offset = 0  # page number
+        self.limit = 100  # num streams to request
         self.ignore_games = self._load_ignored()
         self.timeout_seconds = 5
 
         self.session = requests.Session()
-        # use ver 3 api https://github.com/justintv/Twitch-API/tree/master/v3_resources
-        self.session.headers.update({'Accept': 'application/vnd.twitchtv3+json'})
+        # use ver 3 api
+        # https://github.com/justintv/Twitch-API/tree/master/v3_resources
+        self.session.headers.update(
+            {'Accept': 'application/vnd.twitchtv3+json'})
 
     def _load_ignored(self):
         games = set()
@@ -84,9 +71,9 @@ class StreamStore:
                 if self.interesting(stream):
                     self.streams.append(stream)
 
-                self.current_offset += 1 # next page
+                self.current_offset += 1  # next page
 
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
 
     def ensure(self, num_streams):
@@ -95,6 +82,7 @@ class StreamStore:
         """
         while len(self.streams) < num_streams:
             self.request_streams()
+
 
 def stream_open(store, inp):
     # ui shows nums +1
@@ -106,8 +94,9 @@ def stream_open(store, inp):
     else:
         wb.open('http://twitch.tv/' + name)
 
+
 def print_streams(store, num):
-    print('\n'*30) # get new screen
+    print('\n'*30)  # get new screen
 
     for i in range(num):
         stream = store.streams[i]
@@ -133,6 +122,7 @@ RESET = 'reset'
 QUIT = 'quit'
 OPEN = 'open'
 CONTINUE = 'continue'
+
 
 def take_user_input():
     inp = input()
@@ -173,5 +163,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
