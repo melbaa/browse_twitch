@@ -14,17 +14,19 @@ bioshock 2
 black ops 2
 borderlands 2
 call of duty
+call of duty: advanced warfare
 call of duty: black ops ii
 call of duty: modern warfare 3
 castlevania
 chaos online
+clash of clans
 counter-strike: global offensive
 crash bandicoot
 dark souls
 dayz
 diablo ii
 diablo iii
-Diablo III: Reaper of Souls
+diablo iii: reaper of souls
 dota
 dota 2
 dr. mario
@@ -53,9 +55,9 @@ gta 5
 gta v
 guild wars 2
 guitar hero
+halo
 halo 3
 halo 4
-halo
 hawken
 hearthstone: heroes of warcraft
 heroes of newerth
@@ -72,6 +74,7 @@ left 4 dead 2
 link: the faces of evil
 m.u.g.e.n
 madden nfl
+madden nfl 15
 magic: the gathering
 mega man
 might & magic duel of champions
@@ -94,11 +97,11 @@ pokémon
 pokémon black/white version 2
 pokémon crystal
 pokémon emerald
+pokémon omega ruby/alpha sapphire
 pokémon red/blue
 pokémon stadium
 pokémon xd: gale of darkness
 pokémon yellow: special pikachu edition
-Pokémon Omega Ruby/Alpha Sapphire
 prime world
 pro evolution soccer
 ravaged
@@ -149,12 +152,19 @@ warframe
 wildstar
 world of tanks
 world of warcraft
-World of Warcraft: Warlords of Draenor
+world of warcraft: warlords of draenor
 world of warplanes
 yu-gi-oh! duelists of the roses
+yu-gi-oh! forbidden memories
 zelda ii
 zelda's adventure
-Call of Duty: Advanced Warfare
-Yu-Gi-Oh! Forbidden Memories
-Clash of Clans
-Madden NFL 15
+XCOM: Enemy Within
+The Binding of Isaac: Rebirth
+Dragon Age: Inquisition
+Dark Souls II
+Chrono Trigger
+The Elder Scrolls V: Skyrim
+Super Smash Bros. for Wii U and Nintendo 3DS
+Assassin's Creed: Unity
+Super Smash Bros. for Wii U
+Football Manager 2015
