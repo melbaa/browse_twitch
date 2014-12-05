@@ -49,7 +49,7 @@ class StreamStore:
                 games.add(line.strip().lower())
         return games
 
-    def interesting(self, stream):
+    def _interesting(self, stream):
         """
         yes if stream is not ignored
         """
@@ -64,11 +64,10 @@ class StreamStore:
         url = self.url.format(self.current_offset, self.limit)
         try:
             resp = self.session.get(url, timeout=self.timeout_seconds)
-            print(resp.request.prepare_headers(resp.request.headers))
             streams = resp.json()
             for stream_json in streams['streams']:
                 stream = Stream(stream_json)
-                if self.interesting(stream):
+                if self._interesting(stream):
                     self.streams.append(stream)
 
                 self.current_offset += 1  # next page
@@ -115,6 +114,8 @@ def print_streams(store, num):
         print('{}. ({}) {}'.format(i+1, game, title))
         print('{} {} {}'.format(viewers, url, name))
         print()
+
+def print_help():
     print('q quit r restart <num> open <enter> continue')
 
 UserInput = collections.namedtuple('Input', ['cmd', 'stream_num'])
@@ -122,23 +123,37 @@ RESET = 'reset'
 QUIT = 'quit'
 OPEN = 'open'
 CONTINUE = 'continue'
+INVALID_INPUT = 'invalid_input'
 
+class InvalidUserInput(RuntimeError):
+    pass
 
-def take_user_input():
+def take_user_input(num_printed):
     inp = input()
     inp = inp.strip()
 
-    number = re.match('\d+', inp)
+    number_found = re.match('\d+', inp)
     if inp == '':
         return UserInput(CONTINUE, None)
     elif RESET.startswith(inp):
         return UserInput(RESET, None)
     elif QUIT.startswith(inp):
         return UserInput(QUIT, None)
-    elif number:
-        return UserInput(OPEN, int(inp))
-    else:
-        raise Exception('wtf')
+    elif number_found:
+        num = int(inp)
+        if 1 <= num and num <= num_printed:
+            return UserInput(OPEN, num)
+
+    return UserInput(INVALID_INPUT, None)
+
+def take_valid_input(num_printed):
+    inp = take_user_input(num_printed)
+    while inp.cmd == INVALID_INPUT:
+        print('invalid input, try again')
+        print_help()
+        inp = take_user_input(num_printed)
+    return inp
+
 
 
 def main():
@@ -148,17 +163,21 @@ def main():
     while True:
         store.ensure(num_printed)
         print_streams(store, num_printed)
+        print_help()
 
-        inp = take_user_input()
+        inp = take_valid_input(num_printed)
         print('your input', inp)
         if inp.cmd == RESET:
             store = StreamStore()
         elif inp.cmd == QUIT:
+            print('bye')
             sys.exit(0)
         elif inp.cmd == OPEN:
             stream_open(store, inp)
         elif inp.cmd == CONTINUE:
             store.remove(num_printed)
+
+
 
 
 if __name__ == '__main__':

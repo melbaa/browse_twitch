@@ -101,6 +101,7 @@ pokémon omega ruby/alpha sapphire
 pokémon red/blue
 pokémon stadium
 pokémon stadium 2
+pokémon Battle Revolution
 pokémon xd: gale of darkness
 pokémon yellow: special pikachu edition
 prime world
@@ -214,3 +215,6 @@ tibia
 Get Fit With Mel B
 Tales from the Borderlands
 Kingdom Hearts HD 2.5 Remix
+Final Fantasy III
+portal
+Shovel Knight
