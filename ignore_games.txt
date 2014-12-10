@@ -1,9 +1,15 @@
 7 days to die
+aion: ascension
+alien: isolation
 amnesia: a machine for pigs
 amnesia: the dark
 apb reloaded
 archeage
 arma iii
+assassin's creed iii
+assassin's creed iv: black flag
+assassin's creed: rogue
+assassin's creed: unity
 awesomenauts
 banjo-kazooie
 batman: arkham city
@@ -16,39 +22,57 @@ borderlands 2
 call of duty
 call of duty: advanced warfare
 call of duty: black ops ii
+call of duty: ghosts
 call of duty: modern warfare 3
+call of duty®: advanced warfare
 castlevania
 chaos online
+chrono trigger
 clash of clans
+clicker heroes
 counter-strike: global offensive
 crash bandicoot
+crossfire
+crystal caves
 dark souls
+dark souls ii
 dayz
+dc universe online
+destiny
 diablo ii
 diablo iii
 diablo iii: reaper of souls
 dota
 dota 2
 dr. mario
+dragon age: inquisition
 euro truck simulator
+euro truck simulator 2
 eve online
 f1 2012
 far cry 4
+farming simulator 15
 fifa 14
 fifa 15
 fifa 2013
 fifa soccer 13
+final fantasy iii
 final fantasy iv
 final fantasy tactics
 final fantasy xiv online
 football manager
+football manager 2015
 ftl: faster than light
 game dev tycoon
 garry's mod
 garry`s mod
+geometry wars 3: dimensions
+get fit with mel b
 goat simulator
+goodbye deponia
 grand theft auto iii
 grand theft auto v
+grand theft auto: episodes from liberty city
 grand theft auto: san andreas
 grand theft auto: vice city
 gta 5
@@ -58,32 +82,45 @@ guitar hero
 halo
 halo 3
 halo 4
+halo: the master chief collection
 hawken
 hearthstone: heroes of warcraft
 heroes of newerth
 heroes of the storm
+hotline miami
 i wanna be the boshy
 i wanna be the guy
 infestation: survivor stories
 ios gaming
 kerbal space program
 kid chameleon
+kingdom hearts hd 1.5 remix
+kingdom hearts hd 2.5 remix
 l.a. noire
 league of legends
 left 4 dead 2
+lineage ii: the chaotic chronicle
 link: the faces of evil
 m.u.g.e.n
 madden nfl
 madden nfl 15
 magic: the gathering
+mario kart 8
+mario kart wii
 mega man
+mega man 9
+mega man x
 might & magic duel of champions
 minecraft
 monster hunter 4
+mount & blade: warband
 nba 2k
 nba 2k14
+nba 2k15
+neighbors from hell
 nhl 11
 nhl 14
+nhl 15
 osu!
 outlast
 paper mario: the thousand-year door
@@ -91,9 +128,12 @@ papers, please
 path of exile
 payday 2
 payday: the heist
+phoenix wright: ace attorney
 point blank
 pokemon
+poker
 pokémon
+pokémon battle revolution
 pokémon black/white version 2
 pokémon crystal
 pokémon emerald
@@ -101,33 +141,51 @@ pokémon omega ruby/alpha sapphire
 pokémon red/blue
 pokémon stadium
 pokémon stadium 2
-pokémon Battle Revolution
 pokémon xd: gale of darkness
 pokémon yellow: special pikachu edition
+portal
 prime world
+prismata
 pro evolution soccer
+pro evolution soccer 2015
 ravaged
 rayman legends
+realm of the mad god
 risk of rain
 rock band 3
 rogue legacy
 runescape
 rust
+shovel knight
 silent hill 2
 sims 4
 smite
 sonic
 sonic colors
+south park: the stick of truth
 spelunky
 starcraft
+super castlevania iv
 super mario
+super mario 64
+super mario bros. 3
+super mario galaxy
+super mario sunshine
+super mario world
+super meat boy
 super metroid
+super smash bros. for wii u
+super smash bros. for wii u and nintendo 3ds
 surgeon simulator 2013
+tales from the borderlands
 team fortress 2
 tera
 the binding of isaac
+the binding of isaac: rebirth
 the chaos engine
+the crew
 the elder scrolls online
+the elder scrolls v: skyrim
 the legend of zelda
 the legend of zelda: a link to the past
 the legend of zelda: majora's mask
@@ -136,14 +194,21 @@ the legend of zelda: oracle of ages
 the legend of zelda: skyward sword
 the legend of zelda: the minish cap
 the legend of zelda: the wind waker
+the legend of zelda: the wind waker hd
 the legend of zelda: twilight princess
 the sims 3
+the sims 4
+tibia
 titanfall
 tomba!
+tome: immortal arena
+tony hawk's american wasteland
+toontown online
 tower of heaven
 tower of saviors
 trackmania
 trials fusion
+trove
 uncharted 3
 volgarr the viking
 vvvvvv
@@ -152,69 +217,16 @@ war thunder
 warcraft iii
 warframe
 wildstar
+wings of vi
+wizard101
+wolfenstein: the new order
 world of tanks
 world of warcraft
 world of warcraft: warlords of draenor
 world of warplanes
+xcom: enemy within
 yu-gi-oh! duelists of the roses
 yu-gi-oh! forbidden memories
+yu-gi-oh! online
 zelda ii
 zelda's adventure
-XCOM: Enemy Within
-The Binding of Isaac: Rebirth
-Dragon Age: Inquisition
-Dark Souls II
-Chrono Trigger
-The Elder Scrolls V: Skyrim
-Super Smash Bros. for Wii U and Nintendo 3DS
-Assassin's Creed: Unity
-Super Smash Bros. for Wii U
-Football Manager 2015
-nba 2k15
-Yu-Gi-Oh! Online
-crossfire
-nhl 15
-clicker heroes
-destiny
-Pro Evolution Soccer 2015
-Lineage II: The Chaotic Chronicle
-Farming Simulator 15
-wizard101
-Alien: Isolation
-Halo: The Master Chief Collection
-Goodbye Deponia
-Call of Duty®: Advanced Warfare
-Toontown Online
-South Park: The Stick of Truth
-Euro Truck Simulator 2
-Aion: Ascension
-Assassin's Creed III
-prismata
-Mario Kart 8
-The Sims 4
-Super Mario 64
-Super Mario Galaxy
-Realm of the Mad God
-Trove
-poker
-Mario Kart Wii
-TOME: Immortal Arena
-Assassin's Creed: Rogue
-Wolfenstein: The New Order
-Super Mario World
-DC Universe Online
-Crystal Caves
-Hotline Miami
-Assassin's Creed IV: Black Flag
-The Legend of Zelda: The Wind Waker HD
-Call of Duty: Ghosts
-Super Castlevania IV
-Wings of Vi
-Grand Theft Auto: Episodes from Liberty City
-tibia
-Get Fit With Mel B
-Tales from the Borderlands
-Kingdom Hearts HD 2.5 Remix
-Final Fantasy III
-portal
-Shovel Knight

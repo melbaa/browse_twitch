@@ -115,8 +115,10 @@ def print_streams(store, num):
         print('{} {} {}'.format(viewers, url, name))
         print()
 
+
 def print_help():
     print('q quit r restart <num> open <enter> continue')
+
 
 UserInput = collections.namedtuple('Input', ['cmd', 'stream_num'])
 RESET = 'reset'
@@ -125,8 +127,6 @@ OPEN = 'open'
 CONTINUE = 'continue'
 INVALID_INPUT = 'invalid_input'
 
-class InvalidUserInput(RuntimeError):
-    pass
 
 def take_user_input(num_printed):
     inp = input()
@@ -146,6 +146,7 @@ def take_user_input(num_printed):
 
     return UserInput(INVALID_INPUT, None)
 
+
 def take_valid_input(num_printed):
     inp = take_user_input(num_printed)
     while inp.cmd == INVALID_INPUT:
@@ -153,7 +154,6 @@ def take_valid_input(num_printed):
         print_help()
         inp = take_user_input(num_printed)
     return inp
-
 
 
 def main():
@@ -176,8 +176,6 @@ def main():
             stream_open(store, inp)
         elif inp.cmd == CONTINUE:
             store.remove(num_printed)
-
-
 
 
 if __name__ == '__main__':
