@@ -10,6 +10,7 @@ assassin's creed iii
 assassin's creed iv: black flag
 assassin's creed: rogue
 assassin's creed: unity
+atelier meruru: the apprentice of arland
 awesomenauts
 banjo-kazooie
 batman: arkham city
@@ -26,6 +27,7 @@ call of duty: ghosts
 call of duty: modern warfare 3
 call of duty®: advanced warfare
 castlevania
+chameleon twist 2
 chaos online
 chrono trigger
 clash of clans
@@ -46,6 +48,7 @@ dota
 dota 2
 dr. mario
 dragon age: inquisition
+elite: dangerous
 euro truck simulator
 euro truck simulator 2
 eve online
@@ -59,6 +62,7 @@ fifa soccer 13
 final fantasy iii
 final fantasy iv
 final fantasy tactics
+final fantasy v
 final fantasy xiv online
 football manager
 football manager 2015
@@ -101,6 +105,7 @@ league of legends
 left 4 dead 2
 lineage ii: the chaotic chronicle
 link: the faces of evil
+lunar 2: eternal blue complete
 m.u.g.e.n
 madden nfl
 madden nfl 15
@@ -148,11 +153,13 @@ prime world
 prismata
 pro evolution soccer
 pro evolution soccer 2015
+puzzle & dragons
 ravaged
 rayman legends
 realm of the mad god
 risk of rain
 rock band 3
+rocket knight adventures
 rogue legacy
 runescape
 rust
@@ -186,6 +193,7 @@ the chaos engine
 the crew
 the elder scrolls online
 the elder scrolls v: skyrim
+the evil within
 the legend of zelda
 the legend of zelda: a link to the past
 the legend of zelda: majora's mask
@@ -198,6 +206,7 @@ the legend of zelda: the wind waker hd
 the legend of zelda: twilight princess
 the sims 3
 the sims 4
+this war of mine
 tibia
 titanfall
 tomba!
@@ -206,6 +215,7 @@ tony hawk's american wasteland
 toontown online
 tower of heaven
 tower of saviors
+town of salem
 trackmania
 trials fusion
 trove
