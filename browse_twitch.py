@@ -14,6 +14,19 @@ import webbrowser as wb  # make sure firefox is default for this to work
 import requests
 
 
+"""
+TODO
+how to get disk-backed membership testing for the ignored games?
+ops needed:
+    add string
+    membership test
+    remove string (may be offline)
+bloom filters?
+sqlite? how does its cache work?
+LRU cache?
+"""
+
+
 class Stream:
     def __init__(self, stream_json):
         self.viewers = stream_json.get('viewers', None)
@@ -155,11 +168,17 @@ def take_valid_input(num_printed):
         inp = take_user_input(num_printed)
     return inp
 
+def seq_sz(seq):
+    sum = 0
+    for el in seq:
+        sum += sys.getsizeof(el)
+    return sum
 
 def main():
     num_printed = 5
 
     store = StreamStore()
+    print('store set size', seq_sz(store.ignore_games), 'bytes')
     while True:
         store.ensure(num_printed)
         print_streams(store, num_printed)
