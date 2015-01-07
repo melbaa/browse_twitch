@@ -26,6 +26,9 @@ sqlite? how does its cache work?
 LRU cache?
 """
 
+# persistent store for games ignored
+FILENAME = 'ignore_games.txt'
+
 
 class Stream:
     def __init__(self, stream_json):
@@ -46,7 +49,8 @@ class StreamStore:
         self.url = 'https://api.twitch.tv/kraken/streams/?offset={}&limit={}'
         self.current_offset = 0  # page number
         self.limit = 100  # num streams to request
-        self.ignore_games = self._load_ignored()
+        self.ignore_games = set()
+        self._load_ignored(FILENAME)
         self.timeout_seconds = 5
 
         self.session = requests.Session()
@@ -55,18 +59,21 @@ class StreamStore:
         self.session.headers.update(
             {'Accept': 'application/vnd.twitchtv3+json'})
 
-    def _load_ignored(self):
-        games = set()
-        with codecs.open('ignore_games.txt', 'r', 'utf8') as inp:
+    def _load_ignored(self, filename):
+        self.games = set()
+        with codecs.open(filename, 'r', 'utf8') as inp:
             for line in inp:
-                games.add(line.strip().lower())
-        return games
+                self.ignore_game(line)
+
+    def ignore_game(self, game):
+        self.ignore_games.add(game.strip().lower())
+        self.streams = list(filter(self._interesting, self.streams))
 
     def _interesting(self, stream):
         """
         yes if stream is not ignored
         """
-        if stream.game and stream.game.lower() in self.ignore_games:
+        if stream.game and stream.game.strip().lower() in self.ignore_games:
             return False
         return True
 
@@ -130,7 +137,7 @@ def print_streams(store, num):
 
 
 def print_help():
-    print('q quit r restart <num> open <enter> continue')
+    print('q quit r restart <num> open i<num> ignore game <enter> continue')
 
 
 UserInput = collections.namedtuple('Input', ['cmd', 'stream_num'])
@@ -139,13 +146,15 @@ QUIT = 'quit'
 OPEN = 'open'
 CONTINUE = 'continue'
 INVALID_INPUT = 'invalid_input'
+IGNORE = 'ignore'
 
 
 def take_user_input(num_printed):
     inp = input()
     inp = inp.strip()
 
-    number_found = re.match('\d+', inp)
+    number_found = re.match('\d+$', inp)
+    ignore_found = re.match('i(\d+)$', inp)
     if inp == '':
         return UserInput(CONTINUE, None)
     elif RESET.startswith(inp):
@@ -156,6 +165,12 @@ def take_user_input(num_printed):
         num = int(inp)
         if 1 <= num and num <= num_printed:
             return UserInput(OPEN, num)
+    elif ignore_found:
+        num = int(ignore_found.groups()[0])
+        if 1 <= num and num <= num_printed:
+            return UserInput(IGNORE, num)
+
+
 
     return UserInput(INVALID_INPUT, None)
 
@@ -173,6 +188,14 @@ def seq_sz(seq):
     for el in seq:
         sum += sys.getsizeof(el)
     return sum
+
+def ignore_game(store, inp, filename):
+    stream = store.streams[inp.stream_num-1]
+    if not stream.game:
+        return
+    store.ignore_game(stream.game)
+    with codecs.open(filename, 'a', 'utf8') as f:
+        f.write('\n' + stream.game.strip().lower())
 
 def main():
     num_printed = 5
@@ -195,6 +218,9 @@ def main():
             stream_open(store, inp)
         elif inp.cmd == CONTINUE:
             store.remove(num_printed)
+        elif inp.cmd == IGNORE:
+            ignore_game(store, inp, FILENAME)
+
 
 
 if __name__ == '__main__':
