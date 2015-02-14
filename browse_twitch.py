@@ -37,7 +37,27 @@ class Stream:
         self.name = channel_json.get('name', None)
         self.url = channel_json.get('url', None)
         self.status = channel_json.get('status', None)
+
         self.game = channel_json.get('game', None)
+        if self.game is not None:
+            self.game = self.game.strip().lower()
+
+
+def build_retry_url(url, retry_streams):
+    if len(retry_streams) == 0:
+        return ''
+
+    suffix = retry_streams[0].name
+    for stream in retry_streams[1:]:
+        suffix += ',' + stream.name
+    return url.format(suffix)
+
+
+def request_json(url, session, timeout_seconds):
+
+    resp = session.get(url, timeout=timeout_seconds)
+    streams = resp.json()
+    return streams['streams']
 
 
 class StreamStore:
@@ -45,8 +65,13 @@ class StreamStore:
     pull stream info from twitch api and cache it
     """
     def __init__(self):
+
         self.streams = []
         self.url = 'https://api.twitch.tv/kraken/streams/?offset={}&limit={}'
+
+        self.retry_streams = []
+        # expects comma separated list
+        self.retry_url = 'https://api.twitch.tv/kraken/streams/?channel={}'
         self.current_offset = 0  # page number
         self.limit = 100  # num streams to request
         self.ignore_games = set()
@@ -73,25 +98,43 @@ class StreamStore:
         """
         yes if stream is not ignored
         """
-        if stream.game and stream.game.strip().lower() in self.ignore_games:
-            return False
-        return True
+        if stream.game and stream.game not in self.ignore_games:
+            return True
+        return False
+
+    def _unknown(self, stream):
+        if stream.game is None:
+            return True
+        return False
 
     def remove(self, num):
         self.streams = self.streams[num:]
 
     def request_streams(self):
-        url = self.url.format(self.current_offset, self.limit)
+        url_new = self.url.format(self.current_offset, self.limit)
+        urls = [url_new]
+
+        retry_url = build_retry_url(self.retry_url, self.retry_streams)
+        num_retry = len(self.retry_streams)
+
+        if num_retry:
+            urls.append(retry_url)
+
         try:
-            resp = self.session.get(url, timeout=self.timeout_seconds)
-            streams = resp.json()
-            for stream_json in streams['streams']:
-                stream = Stream(stream_json)
-                if self._interesting(stream):
-                    self.streams.append(stream)
+            for url in urls:
+                streams = request_json(
+                    url, self.session, self.timeout_seconds)
+                for stream_json in streams:
+                    stream = Stream(stream_json)
+                    if self._interesting(stream):
+                        self.streams.append(stream)
+                    if self._unknown(stream):
+                        self.retry_streams.append(stream)
 
-                self.current_offset += 1  # next page
+            self.current_offset += len(streams)  # next page
 
+            # get rid of things we just retried
+            self.retry_streams = self.retry_streams[num_retry:]
         except Exception:
             traceback.print_exc()
 
@@ -170,8 +213,6 @@ def take_user_input(num_printed):
         if 1 <= num and num <= num_printed:
             return UserInput(IGNORE, num)
 
-
-
     return UserInput(INVALID_INPUT, None)
 
 
@@ -183,11 +224,13 @@ def take_valid_input(num_printed):
         inp = take_user_input(num_printed)
     return inp
 
+
 def seq_sz(seq):
     sum = 0
     for el in seq:
         sum += sys.getsizeof(el)
     return sum
+
 
 def ignore_game(store, inp, filename):
     stream = store.streams[inp.stream_num-1]
@@ -196,6 +239,7 @@ def ignore_game(store, inp, filename):
     store.ignore_game(stream.game)
     with codecs.open(filename, 'a', 'utf8') as f:
         f.write('\n' + stream.game.strip().lower())
+
 
 def main():
     num_printed = 5
@@ -220,7 +264,6 @@ def main():
             store.remove(num_printed)
         elif inp.cmd == IGNORE:
             ignore_game(store, inp, FILENAME)
-
 
 
 if __name__ == '__main__':
