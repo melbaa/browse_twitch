@@ -41,7 +41,9 @@ class Stream:
         self.game = channel_json.get('game', None)
         if self.game is not None:
             self.game = self.game.strip().lower()
-
+    
+    def __repr__(self):
+        return '{} name={}'.format(self.__class__, self.name)
 
 def build_retry_url(url, retry_streams):
     if len(retry_streams) == 0:
@@ -114,6 +116,11 @@ class StreamStore:
         url_new = self.url.format(self.current_offset, self.limit)
         urls = [url_new]
 
+        """
+        the url can become too long. batching can help, but it brings its own
+        problems eg. have to keep track how many batches succeeded to avoid
+        showing dups. currently we show dups but code is simpler
+        """
         retry_url = build_retry_url(self.retry_url, self.retry_streams)
         num_retry = len(self.retry_streams)
 
@@ -122,8 +129,10 @@ class StreamStore:
 
         try:
             for url in urls:
+                
                 streams = request_json(
                     url, self.session, self.timeout_seconds)
+                
                 for stream_json in streams:
                     stream = Stream(stream_json)
                     if self._interesting(stream):
@@ -131,7 +140,7 @@ class StreamStore:
                     if self._unknown(stream):
                         self.retry_streams.append(stream)
 
-            self.current_offset += len(streams)  # next page
+                self.current_offset += len(streams)  # move to next page
 
             # get rid of things we just retried
             self.retry_streams = self.retry_streams[num_retry:]
