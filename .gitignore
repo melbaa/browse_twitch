@@ -45,3 +45,4 @@ docs/_build/
 target/
 
 ignore_games.txt.bak
+ignore_games.db

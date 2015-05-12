@@ -3,12 +3,15 @@ small program to browse most popular twitch streams, omitting the games you
 don't care about
 """
 
-import codecs
+
 import collections
-import re
-import sys
-import traceback
+import os.path
 import platform
+import re
+import sqlite3
+import sys
+import time
+import traceback
 import webbrowser as wb  # make sure firefox is default for this to work
 
 import requests
@@ -21,13 +24,13 @@ how to get disk-backed membership testing for the ignored games?
         add string
         membership test
         remove string (may be offline, without program running)
-        
+
     a file for persistence and load all game names in memory set()
         +1 human readable
         -1 everything in memory
         -1 own file format
         +1 easy offline edits
-    use sqlite? 
+    use sqlite?
         +1 has its own cache
             pragma cache_size
             PRAGMA page_size
@@ -40,7 +43,26 @@ normalize names by removing dots/dashes/capitalization
 """
 
 # persistent store for games ignored
-FILENAME = 'ignore_games.txt'
+DBNAME = os.path.dirname(os.path.realpath(__file__)) + '/ignore_games.db'
+
+INIT_DB_QRY = """
+create table if not exists games (
+    name TEXT NOT NULL DEFAULT('') PRIMARY KEY,
+    date_added INT NOT NULL DEFAULT(0)
+);
+
+create index if not exists date_added_idx on games (date_added ASC);
+"""
+
+MEMBERSHIP_QRY = """
+select name from games
+where name = ?
+"""
+
+INSERT_QRY = """
+insert into games(name, date_added)
+values (?, ?)
+"""
 
 
 class Stream:
@@ -54,9 +76,10 @@ class Stream:
         self.game = channel_json.get('game', None)
         if self.game is not None:
             self.game = self.game.strip().lower()
-    
+
     def __repr__(self):
         return '{} name={}'.format(self.__class__, self.name)
+
 
 def build_retry_url(url, retry_streams):
     if len(retry_streams) == 0:
@@ -69,7 +92,6 @@ def build_retry_url(url, retry_streams):
 
 
 def request_json(url, session, timeout_seconds):
-
     resp = session.get(url, timeout=timeout_seconds)
     streams = resp.json()
     return streams['streams']
@@ -81,6 +103,7 @@ class StreamStore:
     """
     def __init__(self):
 
+        self.db_conn, self.db_curr = self._init_db()
         self.streams = []
         self.url = 'https://api.twitch.tv/kraken/streams/?offset={}&limit={}'
 
@@ -89,8 +112,6 @@ class StreamStore:
         self.retry_url = 'https://api.twitch.tv/kraken/streams/?channel={}'
         self.current_offset = 0  # page number
         self.limit = 100  # num streams to request
-        self.ignore_games = set()
-        self._load_ignored(FILENAME)
         self.timeout_seconds = 5
 
         self.session = requests.Session()
@@ -99,23 +120,34 @@ class StreamStore:
         self.session.headers.update(
             {'Accept': 'application/vnd.twitchtv3+json'})
 
-    def _load_ignored(self, filename):
-        self.games = set()
-        with codecs.open(filename, 'r', 'utf8') as inp:
-            for line in inp:
-                self.ignore_game(line)
+    def _init_db(self):
+        db = sqlite3.connect(DBNAME)
+        curr = db.cursor()
+        curr.executescript(INIT_DB_QRY)
+        db.commit()
+
+        return db, curr
+
+    def close(self):
+        self.db_curr.close()
+        self.db_conn.close()
 
     def ignore_game(self, game):
-        self.ignore_games.add(game.strip().lower())
+        game = game.strip().lower()
+        self.db_curr.execute(INSERT_QRY, (game, int(time.time())))
+        self.db_conn.commit()
         self.streams = list(filter(self._interesting, self.streams))
 
     def _interesting(self, stream):
         """
-        yes if stream is not ignored
+        true if stream is not ignored
         """
-        if stream.game and stream.game not in self.ignore_games:
-            return True
-        return False
+        if not stream.game:
+            return False
+
+        res = self.db_curr.execute(MEMBERSHIP_QRY, (stream.game,)).fetchall()
+        self.db_conn.commit()
+        return len(res) == 0
 
     def _unknown(self, stream):
         if stream.game is None:
@@ -142,10 +174,10 @@ class StreamStore:
 
         try:
             for url in urls:
-                
+
                 streams = request_json(
                     url, self.session, self.timeout_seconds)
-                
+
                 for stream_json in streams:
                     stream = Stream(stream_json)
                     if self._interesting(stream):
@@ -202,7 +234,7 @@ def print_streams(store, num):
 
 
 def print_help():
-    print('q quit r restart <num> open i<num> ignore game <enter> continue')
+    print("q quit r restart <num> open i<num> ignore game <enter> continue")
 
 
 UserInput = collections.namedtuple('Input', ['cmd', 'stream_num'])
@@ -247,27 +279,17 @@ def take_valid_input(num_printed):
     return inp
 
 
-def seq_sz(seq):
-    sum = 0
-    for el in seq:
-        sum += sys.getsizeof(el)
-    return sum
-
-
-def ignore_game(store, inp, filename):
+def ignore_game(store, inp):
     stream = store.streams[inp.stream_num-1]
     if not stream.game:
         return
     store.ignore_game(stream.game)
-    with codecs.open(filename, 'a', 'utf8') as f:
-        f.write('\n' + stream.game.strip().lower())
 
 
 def main():
     num_printed = 5
 
     store = StreamStore()
-    print('store set size', seq_sz(store.ignore_games), 'bytes')
     while True:
         store.ensure(num_printed)
         print_streams(store, num_printed)
@@ -276,8 +298,11 @@ def main():
         inp = take_valid_input(num_printed)
         print('your input', inp)
         if inp.cmd == RESET:
+            store.close()
             store = StreamStore()
         elif inp.cmd == QUIT:
+            print('closing db')
+            store.close()
             print('bye')
             sys.exit(0)
         elif inp.cmd == OPEN:
@@ -285,7 +310,7 @@ def main():
         elif inp.cmd == CONTINUE:
             store.remove(num_printed)
         elif inp.cmd == IGNORE:
-            ignore_game(store, inp, FILENAME)
+            ignore_game(store, inp)
 
 
 if __name__ == '__main__':

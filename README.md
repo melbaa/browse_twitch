@@ -13,6 +13,16 @@ games that you still enjoy and it's time to move to a new hobby.
 * pip install requests
 
 # Usage
-Add games you are not interested in to ignore_games.txt. Case, duplicates
-and order don't matter. You can sort with sort_games.py if you want to.
+run browse_twitch.py
+
+The interface is somewhat self explanatory, you get the games from twitch.tv
+with most viewers in descending order. You can ignore them, so you never see
+them again.
+
+The tool stores an ignore list in ignore_games.db. It gets created on first
+run. It's safe to delete it if you want to start with a fresh ignore list,
+just don't forget to close the application first.
+
+You can edit your database with something like SQLiteStudio, but it's usually
+not needed.
 
