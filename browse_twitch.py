@@ -17,31 +17,6 @@ import webbrowser as wb  # make sure firefox is default for this to work
 import requests
 
 
-"""
-TODO
-how to get disk-backed membership testing for the ignored games?
-    ops needed:
-        add string
-        membership test
-        remove string (may be offline, without program running)
-
-    a file for persistence and load all game names in memory set()
-        +1 human readable
-        -1 everything in memory
-        -1 own file format
-        +1 easy offline edits
-    use sqlite?
-        +1 has its own cache
-            pragma cache_size
-            PRAGMA page_size
-        +1 get rid of homegrown file format
-        -1 not human readable (eg browsing the github repo)
-        -1 offline edits harder, need sqlite cli
-    persist somehow and use a LRU cache in memory
-    disk hash table like bdb
-normalize names by removing dots/dashes/capitalization
-"""
-
 # persistent store for games ignored
 DBNAME = os.path.dirname(os.path.realpath(__file__)) + '/ignore_games.db'
 
