@@ -8,7 +8,10 @@ import collections
 import os.path
 import platform
 import re
+import shlex
+import shutil
 import sqlite3
+import subprocess
 import sys
 import time
 import traceback
@@ -125,9 +128,7 @@ class StreamStore:
         return len(res) == 0
 
     def _unknown(self, stream):
-        if stream.game is None:
-            return True
-        return False
+        return stream.game is None
 
     def remove(self, num):
         self.streams = self.streams[num:]
@@ -178,12 +179,16 @@ class StreamStore:
 def stream_open(store, inp):
     # ui shows nums +1
     stream = store.streams[inp.stream_num - 1]
-    url = stream.url
-    name = stream.name
-    if url:
-        wb.open(url)
+    stream.url
+    stream.name
+    url = stream.url or ('http://twitch.tv/' + stream.name)
+    url = shlex.quote(url)
+
+    livestreamer = shutil.which('livestreamer')
+    if platform.system() == 'Windows' and livestreamer:
+        subprocess.call(['start', livestreamer, url, 'best'], shell=True)
     else:
-        wb.open('http://twitch.tv/' + name)
+        wb.open(url)
 
 
 def print_streams(store, num):

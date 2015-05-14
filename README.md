@@ -11,6 +11,7 @@ games that you still enjoy and it's time to move to a new hobby.
 # Install
 * get python 3
 * pip install requests
+* (optional) install VLC and pip install livestreamer
 
 # Usage
 run browse_twitch.py
@@ -26,3 +27,6 @@ just don't forget to close the application first.
 You can edit your database with something like SQLiteStudio, but it's usually
 not needed.
 
+# Links
+There's the somewhat similar, but much fancier
+https://github.com/bastimeyer/livestreamer-twitch-gui
