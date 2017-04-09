@@ -4,6 +4,7 @@ don't care about
 """
 
 
+import argparse
 import collections
 import os.path
 import platform
@@ -15,6 +16,7 @@ import subprocess
 import sys
 import time
 import traceback
+import json
 import webbrowser as wb  # make sure firefox is default for this to work
 
 import requests
@@ -41,6 +43,12 @@ INSERT_QRY = """
 insert into games(name, date_added)
 values (?, ?)
 """
+
+
+def read_config(filename):
+    with open(filename) as f:
+        config = json.loads(f.read())
+    return config
 
 
 class Stream:
@@ -79,11 +87,12 @@ class StreamStore:
     """
     pull stream info from twitch api and cache it
     """
-    def __init__(self):
+    def __init__(self, client_id):
 
         self.db_conn, self.db_curr = self._init_db()
         self.streams = []
         self.url = 'https://api.twitch.tv/kraken/streams/?offset={}&limit={}'
+        self.client_id = client_id
 
         self.retry_streams = []
         # expects comma separated list
@@ -95,8 +104,10 @@ class StreamStore:
         self.session = requests.Session()
         # use ver 3 api
         # https://github.com/justintv/Twitch-API/tree/master/v3_resources
-        self.session.headers.update(
-            {'Accept': 'application/vnd.twitchtv3+json'})
+        self.session.headers.update({
+            'Accept': 'application/vnd.twitchtv3+json',
+            'Client-ID': client_id
+        })
 
     def _init_db(self):
         db = sqlite3.connect(DBNAME)
@@ -167,6 +178,7 @@ class StreamStore:
             self.retry_streams = self.retry_streams[num_retry:]
         except Exception:
             traceback.print_exc()
+            import pdb;pdb.set_trace()
 
     def ensure(self, num_streams):
         """
@@ -175,6 +187,9 @@ class StreamStore:
         while len(self.streams) < num_streams:
             self.request_streams()
 
+def get_streamer():
+    streamer = shutil.which('streamlink') or shutil.which('livestreamer')
+    return streamer
 
 def stream_open(store, inp):
     # ui shows nums +1
@@ -184,9 +199,9 @@ def stream_open(store, inp):
     url = stream.url or ('http://twitch.tv/' + stream.name)
     url = shlex.quote(url)
 
-    livestreamer = shutil.which('livestreamer')
-    if platform.system() == 'Windows' and livestreamer:
-        subprocess.call(['start', livestreamer, url, 'best'], shell=True)
+    streamer = get_streamer()
+    if platform.system() == 'Windows' and streamer:
+        subprocess.call(['start', streamer, url, 'best'], shell=True)
     else:
         wb.open(url)
 
@@ -269,7 +284,13 @@ def ignore_game(store, inp):
 def main():
     num_printed = 5
 
-    store = StreamStore()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('CONFIGPATH', type=str, help='path to secrets.json')
+    args = parser.parse_args()
+    config = read_config(args.CONFIGPATH)
+    client_id = config['client_id']
+
+    store = StreamStore(client_id)
     while True:
         store.ensure(num_printed)
         print_streams(store, num_printed)
@@ -279,7 +300,7 @@ def main():
         print('your input', inp)
         if inp.cmd == RESET:
             store.close()
-            store = StreamStore()
+            store = StreamStore(client_id)
         elif inp.cmd == QUIT:
             print('closing db')
             store.close()
